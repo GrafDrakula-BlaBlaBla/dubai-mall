@@ -35,11 +35,12 @@ footer{padding:24px 0 40px;color:var(--muted);font-size:12px}.small{font-size:12
 .page-tab.active{background:var(--teal);border-color:var(--teal);color:#fff}
 .page-panel[hidden]{display:none!important}
 .route-map-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:14px;margin:16px 0 22px}
-#two-day-map{height:390px;width:100%;border-radius:14px;overflow:hidden;background:#e8ece6}
+#two-day-map{height:390px;width:100%;border:0;border-radius:14px;overflow:hidden;background:#e8ece6}
 .map-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:10px 2px 2px;font-size:12px;color:var(--muted)}
 .legend-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
 .route-intro{background:#edf3ed;border-radius:16px;padding:14px;margin:16px 0}
 @media(max-width:600px){#two-day-map{height:340px}.page-tabs{margin:0 -2px}}
+.google-route-links{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}.google-route-links a{display:inline-flex;align-items:center;justify-content:center;padding:10px 13px;border-radius:12px;background:#edf3fb;color:#185abc;text-decoration:none;font-weight:650;font-size:13px}
 
 </style>
 </head>
@@ -155,13 +156,13 @@ footer{padding:24px 0 40px;color:var(--muted);font-size:12px}.small{font-size:12
 
   <section class="route-map-card">
     <h2 style="margin:4px 0 8px">Карта двухдневного маршрута</h2>
-    <p class="sub">Цвета разделяют дни. Линии показывают порядок остановок схематично, а не точную дорогу или маршрут такси.</p>
-    <div id="two-day-map" aria-label="Интерактивная карта маршрута на два дня"></div>
-    <div class="map-legend">
-      <span><i class="legend-dot" style="background:#b56b42"></i>День 1 · Старый Дубай</span>
-      <span><i class="legend-dot" style="background:#4779ad"></i>День 2 · Сады и Global Village</span>
+    <p class="sub">Карта Google Maps. Для каждого дня можно открыть отдельный маршрут со всеми основными остановками.</p>
+    <iframe id="two-day-map" title="Google Maps — Дубай" src="https://maps.google.com/maps?q=Dubai%2C%20United%20Arab%20Emirates&z=10&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    <div class="google-route-links">
+      <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=Al+Fahidi+Historical+Neighbourhood%2C+Dubai&destination=Souk+Madinat+Jumeirah%2C+Dubai&waypoints=Al+Seef%2C+Dubai%7CBur+Dubai+Abra+Station%7CSpice+Souk%2C+Dubai%7CDubai+Frame&travelmode=driving">Google Maps · День 1 ↗</a>
+      <a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=Dubai+Miracle+Garden&destination=Global+Village%2C+Dubai&waypoints=Alserkal+Avenue%2C+Dubai&travelmode=driving">Google Maps · День 2 ↗</a>
     </div>
-    <p class="small">Нажми на маркер, чтобы открыть точку в Google Maps. Карта загружается из OpenStreetMap; для навигации на машине используй Google Maps или Careem.</p>
+    <p class="small">Маршруты открываются в Google Maps в отдельной вкладке. В первый день переправу через Creek на abra лучше пройти отдельно пешком до причала — навигатор может предложить автомобильный объезд.</p>
   </section>
 
   <section id="new-day1">
@@ -248,3 +249,34 @@ footer{padding:24px 0 40px;color:var(--muted);font-size:12px}.small{font-size:12
 </div>
 
 </div>
+
+<script>
+(function () {
+  function initGuide() {
+    const tabFive = document.getElementById('tab-five');
+    const tabTwo = document.getElementById('tab-two');
+    const pageFive = document.getElementById('page-five-day');
+    const pageTwo = document.getElementById('page-two-day');
+    if (!tabFive || !tabTwo || !pageFive || !pageTwo) return;
+
+    function showPage(showTwo) {
+      pageFive.hidden = showTwo;
+      pageTwo.hidden = !showTwo;
+      tabFive.classList.toggle('active', !showTwo);
+      tabTwo.classList.toggle('active', showTwo);
+      tabFive.setAttribute('aria-selected', String(!showTwo));
+      tabTwo.setAttribute('aria-selected', String(showTwo));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    tabFive.addEventListener('click', function () { showPage(false); });
+    tabTwo.addEventListener('click', function () { showPage(true); });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGuide);
+  } else {
+    initGuide();
+  }
+})();
+</script>
+</body>
+</html>
